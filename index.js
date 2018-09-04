@@ -9,6 +9,7 @@ const mkdirp = require('mkdirp');
 var sharp = require('sharp');
 // alpine linux needs no cache option
 sharp.cache(false);
+//sharp.concurrency(16);
 
 const exifReader = require('exif-reader');
 
@@ -19,9 +20,11 @@ const ffmpeg = require('fluent-ffmpeg');
 // 2 and 4 are mirrors of 1 and 3, 5 and 7 are mirrors of 6 and 8
 const needsSwitched = [5, 6, 7, 8];
 
+const isVideo = (f) => (path.extname(f).toLowerCase() == '.mov')
+
 function cacheThumb(src, dest, width, height, cb) {
 
-  if(path.extname(src).toLowerCase() == '.mov') {
+  if(isVideo(src)) {
     return cacheVideoThumb(src, dest, width, height, cb);
   }
 
@@ -116,7 +119,7 @@ function cacheThumbAndGetBuffer(src, dest, width, height, cb) {
 
   // Translate dest to have image extension with thumbs for videos
   var tran_dest = dest;
-  if(path.extname(src).toLowerCase() == '.mov') {
+  if(isVideo(src)) {
     tran_dest = dest + '.PNG';
   }
 
@@ -150,7 +153,7 @@ function cacheThumbAndGetBuffer(src, dest, width, height, cb) {
 
 function getMetadata(src, cb) {
 
-  if(path.extname(src).toLowerCase() == '.mov') {
+  if(isVideo(src)) {
     return getVideoMetadata(src, cb);
   }
 
@@ -229,8 +232,12 @@ function getVideoMetadata(src, cb) {
         return cb(err, undefined);
       }
 
-      returnMetadata['formatType'] = metadata.format.format_name; //'mov,mp4,m4a,3gp,3g2,mj2'
-      returnMetadata['modifyDate'] = new Date(metadata.format.tags.creation_time); //'2018-03-26 18:07:46'
+      if (metadata.format) {
+        returnMetadata['formatType'] = metadata.format.format_name; //'mov,mp4,m4a,3gp,3g2,mj2'
+        if (metadata.format.tags && metadata.format.tags.creation_time) {
+          returnMetadata['modifyDate'] = new Date(metadata.format.tags.creation_time); //'2018-03-26 18:07:46'
+      }
+      }
 
       //for metadata.streams[]
       //returnMetadata['width'] = metadata.streams[i].width; //1920
@@ -239,8 +246,11 @@ function getVideoMetadata(src, cb) {
       //returnMetadata[''] = metadata.streams[i].codec_type; //'video'
 
       //returnMetadata['orientation']
-      returnMetadata['orientedWidth'] = metadata.streams[0].width; //1920
-      returnMetadata['orientedHeight'] = metadata.streams[0].height; //1080
+      // TODO just looking at the first one for now
+      if (metadata.streams && metadata.streams.length > 0) {
+        returnMetadata['orientedWidth'] = metadata.streams[0].width; //1920
+        returnMetadata['orientedHeight'] = metadata.streams[0].height; //1080
+      }
       //returnMetadata['exifOrientation']
       //returnMetadata['exifGPS']
       return cb(undefined, returnMetadata);
