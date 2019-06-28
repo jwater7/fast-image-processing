@@ -52,8 +52,12 @@ function cacheImageThumb(src, dest, width, height, cb) {
       const sharpImage = sharp(src);
       return sharpImage
         .rotate()
-        .resize(width, height)
-        .crop(sharp.strategy.attention)
+        .resize({
+          width,
+          height,
+          fit: sharp.fit.cover,
+          position: sharp.strategy.attention,
+        })
         .toFile(dest, (err, info) => {
           if (err) {
             return cb(err, undefined, undefined);
