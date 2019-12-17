@@ -20,7 +20,11 @@ const ffmpeg = require('fluent-ffmpeg');
 // 2 and 4 are mirrors of 1 and 3, 5 and 7 are mirrors of 6 and 8
 const needsSwitched = [5, 6, 7, 8];
 
-const isVideo = (f) => (path.extname(f).toLowerCase() == '.mov')
+// TODO need to detect mroe video formats from names
+const isVideo = (f) => (
+  path.extname(f).toLowerCase() == '.mov'
+  || path.extname(f).toLowerCase() == '.mp4'
+)
 
 function cacheThumb(src, dest, width, height, cb) {
 
