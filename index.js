@@ -242,9 +242,21 @@ function getVideoMetadata(src, cb) {
 
       if (metadata.format) {
         returnMetadata['formatType'] = metadata.format.format_name; //'mov,mp4,m4a,3gp,3g2,mj2'
-        if (metadata.format.tags && metadata.format.tags.creation_time) {
-          returnMetadata['modifyDate'] = new Date(metadata.format.tags.creation_time); //'2018-03-26 18:07:46'
-      }
+
+        if (metadata.format.tags) {
+          if (metadata.format.tags.creation_time) {
+            returnMetadata['modifyDate'] = new Date(metadata.format.tags.creation_time); //'2018-03-26 18:07:46'
+          }
+          // overwrite if it has an apple one
+          if (metadata.format.tags['com.apple.quicktime.creationdate']) {
+            returnMetadata['modifyDate'] = new Date(metadata.format.tags['com.apple.quicktime.creationdate']); //'2021-11-16T21:32:21-0800'
+          }
+
+          // save location if it has it
+          if (metadata.format.tags['com.apple.quicktime.location.ISO6709']) {
+            returnMetadata['ISO6709GPS'] = metadata.format.tags['com.apple.quicktime.location.ISO6709']); //'+47.1187-122.9301+034.945/'
+          }
+        }
       }
 
       //for metadata.streams[]
