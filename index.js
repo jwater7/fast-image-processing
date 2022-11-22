@@ -197,17 +197,21 @@ function getImageMetadata(src, cb) {
         }
         // populate from exif
         if (metadata.exif) {
-          const exifData = exifReader(metadata.exif);
-          if (exifData) {
-            if(exifData.image.Orientation) {
-              returnMetadata['exifOrientation'] = exifData.image.Orientation;
+          try {
+            const exifData = exifReader(metadata.exif);
+            if (exifData) {
+              if(exifData.image.Orientation) {
+                returnMetadata['exifOrientation'] = exifData.image.Orientation;
+              }
+              if(exifData.image.ModifyDate) {
+                returnMetadata['modifyDate'] = exifData.image.ModifyDate;
+              }
+              if(exifData.gps) {
+                returnMetadata['exifGPS'] = exifData.gps;
+              }
             }
-            if(exifData.image.ModifyDate) {
-              returnMetadata['modifyDate'] = exifData.image.ModifyDate;
-            }
-            if(exifData.gps) {
-              returnMetadata['exifGPS'] = exifData.gps;
-            }
+          } catch(err) {
+            console.log(`TODO Error for ${src}`, err)
           }
         }
         return cb(undefined, returnMetadata);
