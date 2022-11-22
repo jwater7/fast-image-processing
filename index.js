@@ -250,7 +250,7 @@ function getVideoMetadata(src, cb) {
 
           // save location if it has it
           if (metadata.format.tags['com.apple.quicktime.location.ISO6709']) {
-            returnMetadata['ISO6709GPS'] = metadata.format.tags['com.apple.quicktime.location.ISO6709']); //'+47.1187-122.9301+034.945/'
+            returnMetadata['ISO6709GPS'] = metadata.format.tags['com.apple.quicktime.location.ISO6709']; //'+47.1187-122.9301+034.945/'
           }
         }
       }
