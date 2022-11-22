@@ -211,7 +211,7 @@ function getImageMetadata(src, cb) {
               }
             }
           } catch(err) {
-            console.log(`TODO Error for ${src}`, err)
+            // console.log(`TODO Error for ${src}`, err)
           }
         }
         return cb(undefined, returnMetadata);
