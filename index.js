@@ -48,11 +48,9 @@ function cacheImageThumb(src, dest, width, height, cb) {
     }
 
     // try making the directory if not already there
-    mkdirp(path.dirname(dest), (err) => {
-      if (err) {
-        return cb(err, undefined, undefined);
-      }
-
+    mkdirp(path.dirname(dest))
+    .catch(err => cb(err, undefined, undefined))
+    .then(() => {
       const sharpImage = sharp(src);
       return sharpImage
         .rotate()
@@ -92,11 +90,9 @@ function cacheVideoThumb(src, dest, width, height, cb) {
     }
 
     // try making the directory if not already there
-    mkdirp(path.dirname(dest), (err) => {
-      if (err) {
-        return cb(err, undefined, undefined);
-      }
-
+    mkdirp(path.dirname(dest))
+    .catch(err => cb(err, undefined, undefined))
+    .then(() => {
       const ffmpegImage = ffmpeg(src);
       return ffmpegImage
         .on('end', function(err, stdout, stderr) {
