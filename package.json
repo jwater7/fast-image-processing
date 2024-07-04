@@ -29,9 +29,9 @@
   },
   "homepage": "https://github.com/jwater7/fast-image-processing#readme",
   "dependencies": {
-    "exif-reader": "^1.0.2",
-    "fluent-ffmpeg": "^2.1.2",
-    "mkdirp": "^1.0.4",
-    "sharp": "^0.27.0"
+    "exif-reader": "^2.0.1",
+    "fluent-ffmpeg": "^2.1.3",
+    "mkdirp": "^3.0.1",
+    "sharp": "^0.33.4"
   }
 }
