@@ -5,7 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 var sharp = require('sharp');
 // alpine linux needs no cache option
 sharp.cache(false);
